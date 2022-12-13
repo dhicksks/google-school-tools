@@ -29,6 +29,9 @@ sessionTokenCache = flask_caching.Cache(app)
 
 
 
+def serveFolder():
+    return("Serve sub-folder content here.")
+
 # Add any sub-folder found in the source folder as routes for Flask.
 for item in os.listdir("."):
     if os.path.isdir(item):
@@ -41,10 +44,7 @@ for item in os.listdir("."):
             print("Adding folder: " + item)
             app.add_url_rule("/" + item, view_func=serveFolder)
 
-            
-            
-def serveFolder():
-    return("Serve sub-folder content here.")
+
 
 def getFile(theFilename):
     fileDataHandle = open(theFilename, encoding="latin-1")
