@@ -14,6 +14,9 @@ import requests
 # The MyStart.Online page ID to use.
 mystartLoginPage = "0000000000000002"
 
+# Any sub-folders to exclude from being added as apps / static content.
+excludedSubFolders = [".git", "__pycache__"]
+
 
 
 # Instantiate the Flask app, set configuration values.
@@ -34,7 +37,7 @@ def serveFolder():
 
 # Add any sub-folder found in the source folder as routes for Flask.
 for item in os.listdir("."):
-    if os.path.isdir(item):
+    if os.path.isdir(item) and not item in excludedSubFolders:
         # If a folder contains an "app.py" then it's an executable app.
         if os.path.exists(item + os.sep + "app.py"):
             print("Adding app: " + item)
