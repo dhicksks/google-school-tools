@@ -20,7 +20,7 @@ app = flask.Flask(__name__)
 app.config.from_mapping({
     # Set values for the Flask-Caching module.
     "CACHE_TYPE": "filesystem",
-    "CACHE_DIR": "tmp",
+    "CACHE_DIR": "C:\Program Files\GoogleSchoolTools\cache",
     "CACHE_DEFAULT_TIMEOUT": 1800
 })
 # Instantiate the cache object.
