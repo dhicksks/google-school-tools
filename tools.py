@@ -59,7 +59,7 @@ def mystartLogin():
         loginToken = flask.request.form.get("loginToken")
         loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + "0000000000000002")
         if loginTokenValidationRequest.status_code == 200:
-            loginResult = json.loads(loginTokenValidationRequest.json())
+            loginResult = loginTokenValidationRequest.json()
             # '{"login":"valid","emailHash":"' + hashEmailAddress(emailAddress, salt) + '","emailDomain":"' + emailAddress.split("@")[1] + '","loginType":"' + loginType + '"}'
             print(loginResult)
             sessionToken = generateSessionToken({"userID":"userIDGoesHere"})
