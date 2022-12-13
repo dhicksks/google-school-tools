@@ -41,7 +41,7 @@ for item in os.listdir("."):
         # If a folder contains an "app.py" then it's an executable app.
         if os.path.exists(item + os.sep + "app.py"):
             print("Adding app: " + item)
-            newModule = __import__(item + "/app.py")
+            newModule = __import__(item + "/app")
             app.add_url_rule("/" + item, view_func=newModule.app)
         # Otherwise we just treat it as static content to be served.
         else:
