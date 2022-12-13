@@ -11,6 +11,9 @@ import flask_caching
 # The Requests library, for handling HTTP(S) calls.
 import requests
 
+# The MyStart.Online page ID to use.
+mystartLoginPage = "0000000000000002"
+
 
 
 # Instantiate the Flask app, set configuration values.
@@ -49,33 +52,21 @@ def generateSessionToken(userData):
     sessionTokenCache.set(sessionToken, userData)
     return(sessionToken)
 
-@app.route("/", methods=['GET'])
-def photoUpload():
-    return "User interface goes here."
-
-@app.route("/api/mystartLogin", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def mystartLogin():
     if flask.request.method == 'POST':
         loginToken = flask.request.form.get("loginToken")
-        loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + "0000000000000002")
+        loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + mystartLoginPage)
         if loginTokenValidationRequest.status_code == 200:
-            loginResult = loginTokenValidationRequest.json()
-            # '{"login":"valid","emailHash":"' + hashEmailAddress(emailAddress, salt) + '","emailDomain":"' + emailAddress.split("@")[1] + '","loginType":"' + loginType + '"}'
-            print(loginResult)
-            sessionToken = generateSessionToken({"userID":"userIDGoesHere"})
+            # Should be a JSON string reading: "login":"valid","emailHash", "emailDomain", "loginType"
+            userDetails = loginTokenValidationRequest.json()
+            sessionToken = generateSessionToken(userDetails)
             return "This should be an HTML page with replaced session token: " + sessionToken
         else:
             return "Login error."
     else:
-        return "Was a GET."
+        return "Replace with non-logged-in menu page."
 
-        #userData = sessionTokenCache.get(loginToken)
-        #if userData:
-            #userData["login"] = "valid"
-            #return userData
-
-
-    # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
-
+# /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 if __name__ == "__main__":
     app.run()
