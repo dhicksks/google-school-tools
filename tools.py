@@ -67,13 +67,13 @@ def mystartLogin():
         if loginTokenValidationRequest.status_code == 200:
             # The user data supplied from MyStart.Online should be a JSON string reading: "login":"valid","emailHash", "emailDomain", "loginType".
             # We cache that with a newly-generated session key and return an HTML page to the user.
-            return replaceKeywords(getFile("tools.html"), {"SESSIONTOKEN":generateSessionToken(loginTokenValidationRequest.json())})
+            return replaceKeywords(getFile("tools.html"), {"HEADER":getFile("header.html"),"SESSIONTOKEN":generateSessionToken(loginTokenValidationRequest.json())})
         else:
             # Return the error message page to the user.
-            return replaceKeywords(getFile("error.html"), {"ERRORMESSAGE":"Invalid login - MyStart.Online returned non-200 status code."})
+            return replaceKeywords(getFile("error.html"), {"HEADER":getFile("header.html"),"ERRORMESSAGE":"Invalid login - MyStart.Online returned non-200 status code."})
     else:
         # Return the non-logged-in HTML page to the user.
-        return replaceKeywords(getFile("tools.html"), {"SESSIONTOKEN":""})
+        return replaceKeywords(getFile("tools.html"), {"HEADER":getFile("header.html"),"SESSIONTOKEN":""})
 
 # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 if __name__ == "__main__":
