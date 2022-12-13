@@ -1,13 +1,12 @@
 # Standard Python libraries.
 import os
-import cgi
-import hashlib
-import sqlite3
+#import cgi
+#import hashlib
 
 # The Flask library, a lightweight web application framework.
 import flask
 
-# The Flask-Caching in-memory store, used to store values (i.e. login tokens) between executions of this script.
+# Flask-Caching, used to store session tokens.
 import flask_caching
 
 # The Requests library, for handling HTTP(S) calls.
@@ -23,8 +22,8 @@ app.config.from_mapping({
     "CACHE_DIR": "C:\Program Files\GoogleSchoolTools\cache",
     "CACHE_DEFAULT_TIMEOUT": 1800
 })
-# Instantiate the cache object.
-loginTokenCache = flask_caching.Cache(app)
+# Instantiate the session cache object.
+sessionTokenCache = flask_caching.Cache(app)
 
 
 
@@ -45,6 +44,12 @@ def runCommand(theCommand):
     commandHandle.close()
     return(result)
 
+# Generate and cache a session token for a validated user, returning the session token.
+def generateSessionToken(userData):
+    sessionToken = str(uuid.uuid4())
+    sessionTokenCache.set(sessionToken, userData)
+    return(sessionToken)
+
 @app.route("/", methods=['GET'])
 def photoUpload():
     return "User interface goes here."
@@ -55,19 +60,18 @@ def mystartLogin():
         loginToken = flask.request.form.get("loginToken")
         loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + "0000000000000002")
         if loginTokenValidationRequest.status_code == 200:
-            return "Session validated! Token: " + loginToken
+            sessionToken = generateSessionToken({"userID":"userIDGoesHere"})
+            return "This should be an HTML page with replaced session token: " + sessionToken
         else:
             return "Login error."
     else:
         return "Was a GET."
 
-        #userData = loginTokenCache.get(loginToken)
+        #userData = sessionTokenCache.get(loginToken)
         #if userData:
             #userData["login"] = "valid"
             #return userData
 
-    #dbCon = sqlite3.connect("sessions.db")
-    #dbCur = dbCon.cursor()
 
     # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 
