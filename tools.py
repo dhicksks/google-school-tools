@@ -52,6 +52,7 @@ def generateSessionToken(userData):
     sessionTokenCache.set(sessionToken, userData)
     return(sessionToken)
 
+# Given a string, replaces all instances of each given keyword (enclosed in brackets, e.g. {{SOMETHING}}) with the matching value.
 def replaceKeywords(theText, theKeywords):
     result = theText
     for keyword in theKeywords.keys():
@@ -64,12 +65,15 @@ def mystartLogin():
         loginToken = flask.request.form.get("loginToken")
         loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + mystartLoginPage)
         if loginTokenValidationRequest.status_code == 200:
-            # Should be a JSON string reading: "login":"valid","emailHash", "emailDomain", "loginType"
+            # The user data supplied from MyStart.Online should be a JSON string reading: "login":"valid","emailHash", "emailDomain", "loginType".
+            # We cache that with a newly-generated session key and return an HTML page to the user.
             return replaceKeywords(getFile("tools.html"), {"SESSIONTOKEN":generateSessionToken(loginTokenValidationRequest.json())})
         else:
-            return "Login error."
+            # Return the error message page to the user.
+            return replaceKeywords(getFile("error.html"), {"ERRORMESSAGE":"Invalid login - MyStart.Online returned non-200 status code."})
     else:
-        return "Replace with non-logged-in menu page."
+        # Return the non-logged-in HTML page to the user.
+        return replaceKeywords(getFile("tools.html"), {"SESSIONTOKEN":""})
 
 # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 if __name__ == "__main__":
