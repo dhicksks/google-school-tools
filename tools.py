@@ -7,12 +7,26 @@ import sqlite3
 # The Flask library, a lightweight web application framework.
 import flask
 
+# The Flask-Caching in-memory store, used to store values (i.e. login tokens) between executions of this script.
+import flask_caching
+
 # The Requests library, for handling HTTP(S) calls.
 import requests
 
 
 
+# Instantiate the Flask app, set configuration values.
 app = flask.Flask(__name__)
+app.config.from_mapping({
+    # Set values for the Flask-Caching module.
+    "CACHE_TYPE": "filesystem",
+    "CACHE_DIR": "tmp",
+    "CACHE_DEFAULT_TIMEOUT": 1800
+})
+# Instantiate the cache object.
+loginTokenCache = flask_caching.Cache(app)
+
+
 
 def getFile(theFilename):
     fileDataHandle = open(theFilename, encoding="latin-1")
