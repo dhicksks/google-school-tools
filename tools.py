@@ -38,10 +38,10 @@ def serveFolder():
 # Add any sub-folder found in the source folder as routes for Flask.
 for item in os.listdir("."):
     if os.path.isdir(item) and not item in excludedSubFolders:
-        # If a folder contains an "app.py" then it's an executable app.
-        if os.path.exists(item + os.sep + "app.py"):
+        # If there's a matching .py file, then it's an executable app.
+        if os.path.exists(item + ".py"):
             print("Adding app: " + item)
-            newModule = __import__(item + "/app")
+            newModule = __import__(item)
             app.add_url_rule("/" + item, view_func=newModule.app)
         # Otherwise we just treat it as static content to be served.
         else:
