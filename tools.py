@@ -52,6 +52,12 @@ def generateSessionToken(userData):
     sessionTokenCache.set(sessionToken, userData)
     return(sessionToken)
 
+def replaceKeywords(theText, theKeywords):
+    result = theText
+    for keyword in theKeywords.keys():
+        result = result.replace("{{"+keyword+"}}", theKeywords[keyword])
+    return result
+
 @app.route("/", methods=['GET', 'POST'])
 def mystartLogin():
     if flask.request.method == 'POST':
@@ -59,9 +65,7 @@ def mystartLogin():
         loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + mystartLoginPage)
         if loginTokenValidationRequest.status_code == 200:
             # Should be a JSON string reading: "login":"valid","emailHash", "emailDomain", "loginType"
-            userDetails = loginTokenValidationRequest.json()
-            sessionToken = generateSessionToken(userDetails)
-            return "This should be an HTML page with replaced session token: " + sessionToken
+            return replaceKeywords(getFile("tools.html"), {"SESSIONTOKEN":generateSessionToken(loginTokenValidationRequest.json())})
         else:
             return "Login error."
     else:
