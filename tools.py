@@ -29,6 +29,11 @@ sessionTokenCache = flask_caching.Cache(app)
 
 
 
+for item in os.listdir("."):
+    print(item)
+
+
+
 def getFile(theFilename):
     fileDataHandle = open(theFilename, encoding="latin-1")
     fileData = fileDataHandle.read()
@@ -77,6 +82,4 @@ def mystartLogin():
 
 # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 if __name__ == "__main__":
-    for item in os.listdir("."):
-        print(item)
     app.run()
