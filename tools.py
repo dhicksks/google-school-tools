@@ -1,8 +1,6 @@
 # Standard Python libraries.
 import os
 import uuid
-#import cgi
-#import hashlib
 
 # The Flask library, a lightweight web application framework.
 import flask
@@ -61,6 +59,9 @@ def mystartLogin():
         loginToken = flask.request.form.get("loginToken")
         loginTokenValidationRequest = requests.get("https://dev.mystart.online/api/validateToken?loginToken=" + loginToken + "&pageName=" + "0000000000000002")
         if loginTokenValidationRequest.status_code == 200:
+            loginResult = json.loads(loginTokenValidationRequest.json())
+            # '{"login":"valid","emailHash":"' + hashEmailAddress(emailAddress, salt) + '","emailDomain":"' + emailAddress.split("@")[1] + '","loginType":"' + loginType + '"}'
+            print(loginResult)
             sessionToken = generateSessionToken({"userID":"userIDGoesHere"})
             return "This should be an HTML page with replaced session token: " + sessionToken
         else:
