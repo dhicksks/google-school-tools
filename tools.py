@@ -77,4 +77,6 @@ def mystartLogin():
 
 # /home/dhicks6345789/gamadv-xtd3/gam select knightsbridgeschool info domain
 if __name__ == "__main__":
+    for item in os.listdir("."):
+        print(item)
     app.run()
