@@ -29,10 +29,22 @@ sessionTokenCache = flask_caching.Cache(app)
 
 
 
+# Add any sub-folder found in the source folder as routes for Flask.
 for item in os.listdir("."):
-    print(item)
+    if os.path.isdir(item):
+        # If a folder contains an "app.py" then it's an executable app.
+        if os.path.exists(item + os.sep + "app.py"):
+            print("Adding app: " + item)
+            #app.add_url_rule("/" + item, view_func=item)
+        # Otherwise we just treat it as static content to be served.
+        else:
+            print("Adding folder: " + item)
+            app.add_url_rule("/" + item, view_func=serveFolder)
 
-
+            
+            
+def serveFolder():
+    return("Serve sub-folder content here.")
 
 def getFile(theFilename):
     fileDataHandle = open(theFilename, encoding="latin-1")
